@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { getModelVisual } from '../../fetching/visuals'; // Import the function you created earlier
+    import { getModelVisual } from '../../fetching/visuals';
   
     export let module: string;
     export let params: Record<string, string | number>;

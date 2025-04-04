@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Card, CardContent, CardFooter, CardHeader } from "$lib/components/ui/card";
+    import { Card, CardContent, CardHeader } from "$lib/components/ui/card";
     import { Avatar, AvatarFallback, AvatarImage } from "$lib/components/ui/avatar";
   
     export let content: string;

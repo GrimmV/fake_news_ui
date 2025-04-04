@@ -2,7 +2,7 @@
 
     import Visual from "./Visual.svelte";
 
-    let modules = [
+    export let modules = [
         {
             name: "feature distribution",
             params: {

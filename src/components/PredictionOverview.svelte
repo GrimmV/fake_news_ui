@@ -1,13 +1,16 @@
-<script>
+<script lang="ts">
+  import { onMount } from "svelte";
+  import { getPrediction } from "../../fetching/prediction";
   import SocialPost from "./SocialPost.svelte";
   import RangeIndicator from "./RangeIndicator.svelte";
 
+  let isLoading: boolean = false;
+  let error: string | null = null;
+
   let post = {
-    author: "History Facts",
-    username: "@historyfacts",
-    avatar: "https://via.placeholder.com/50",
-    timestamp: "2h ago",
-    text: "George Washington said a free people should be armed to guard against government tyranny.",
+    author: "Gloria",
+    statement:
+      "George Washington said a free people should be armed to guard against government tyranny.",
     properties: {
       "Lexical Diversity (TTR)": { value: 1, min: 0, max: 1 },
       "Average Word Length": { value: 4.75, min: 3, max: 7 },
@@ -19,32 +22,61 @@
     },
     prediction: {
       label: "True",
-      probabilities: {
+      probas: {
         True: "79.61%",
-        "Somewhat True": "12.84%",
+        Neither: "12.84%",
         False: "7.55%",
       },
     },
   };
+
+  async function fetchVisual() {
+    isLoading = true;
+    error = null;
+
+    try {
+      const response = await getPrediction();
+      post = response;
+    } catch (err) {
+      error = err instanceof Error ? err.message : "Failed to load visual";
+      console.error("Error fetching visual:", err);
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  onMount(() => {
+    fetchVisual();
+  });
 </script>
 
 <div class="post-container gap-4">
-  <div class="gap-4 flex flex-col">
-    <SocialPost content={post.text} />
-    <div class="grid grid-cols-3 gap-4">
-      {#each Object.entries(post.properties) as [key, { value, min, max }]}
-        <RangeIndicator {value} {min} {max} title={key} />
-      {/each}
+  {#if isLoading}
+    <div class="loading">Loading prediction overview...</div>
+  {:else if error}
+    <div class="error">Error: {error}</div>
+  {:else}
+    <div class="gap-4 flex flex-col">
+      <SocialPost
+        content={post.statement}
+        username={post.author}
+        avatar={post.author}
+      />
+      <div class="grid grid-cols-3 gap-4">
+        {#each Object.entries(post.properties) as [key, { value, min, max }]}
+          <RangeIndicator {value} {min} {max} title={key} />
+        {/each}
+      </div>
     </div>
-  </div>
-  <div class="prediction-container">
-    <div class="prediction-label">Labeled as: {post.prediction.label}</div>
-    <div class="probabilities">
-      {#each Object.entries(post.prediction.probabilities) as [key, value]}
-        <div class="probability"><strong>{key}:</strong> {value}</div>
-      {/each}
+    <div class="prediction-container">
+      <div class="prediction-label">Labeled as: {post.prediction.label}</div>
+      <div class="probabilities">
+        {#each Object.entries(post.prediction.probas) as [key, value]}
+          <div class="probability"><strong>{key}</strong> {value}</div>
+        {/each}
+      </div>
     </div>
-  </div>
+  {/if}
 </div>
 
 <style>

@@ -1,0 +1,21 @@
+
+
+export function handle_module_information(modules_in) {
+
+    const visualization_modules = []
+    const explanation_modules = []
+
+    for (let elem of modules_in) {
+        visualization_modules.push({
+            name: elem["module"],
+            params: elem["parameters"]
+        })
+        explanation_modules.push({
+            name: elem["module"],
+            explanation: elem["explanation"]
+        })
+    }
+
+    return [visualization_modules, explanation_modules]
+
+}

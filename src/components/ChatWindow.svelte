@@ -1,15 +1,18 @@
-<script>
+<script lang="ts">
     import { Button } from "$lib/components/ui/button";
     
-    let messages = [
-      { sender: "user", text: "Hey there!" },
-      { sender: "partner", text: "Hi! How are you?" }
-    ];
+    export let messages;
+    export let sendRequest: (message: string) => void;
+    export let writeState;
+    export let sendInitialRequest;
+
+    console.log(messages)
+
     let newMessage = "";
-  
+
     function sendMessage() {
       if (newMessage.trim()) {
-        messages = [...messages, { sender: "user", text: newMessage.trim() }];
+        sendRequest(newMessage)
         newMessage = "";
       }
     }
@@ -42,7 +45,7 @@
       align-self: flex-end;
       background-color: #d1f7c4;
     }
-    .partner {
+    .assistant {
       align-self: flex-start;
       background-color: #ffffff;
       border: 1px solid #ccc;
@@ -51,6 +54,14 @@
       display: flex;
       gap: 8px;
       padding-top: 10px;
+    }
+    .input-area-closed {
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      background-color: lightgrey;
+      justify-content: center;
+      align-items: center;
     }
     input {
       flex: 1;
@@ -61,14 +72,24 @@
   </style>
   
   <div class="chat-container">
-    <div class="messages">
-      {#each messages as message}
-        <div class="message {message.sender}">{message.text}</div>
-      {/each}
-    </div>
-    <div class="input-area">
-      <input type="text" bind:value={newMessage} placeholder="Type a message..." on:keydown={(e) => e.key === 'Enter' && sendMessage()} />
-      <Button on:click={sendMessage}>Send</Button>
-    </div>
+    {#if messages.length === 0}
+      <Button on:click={sendInitialRequest}>Start Conversation</Button>
+    {:else}
+      <div class="messages">
+        {#each messages as message}
+          <div class="message {message.actor}">{message.message}</div>
+        {/each}
+      </div>
+    {/if}
+    {#if writeState === ""}
+      <div class="input-area">
+        <input type="text" bind:value={newMessage} placeholder="Type a message..." on:keydown={(e) => e.key === 'Enter' && sendMessage()} />
+        <Button on:click={sendMessage}>Send</Button>
+      </div>
+    {:else}
+      <div class="input-area-closed">
+        {writeState}
+      </div>
+    {/if}
   </div>
   
