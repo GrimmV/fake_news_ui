@@ -134,6 +134,7 @@
   {:else}
     <div>
       <Manage
+        {isFinish}
         {dots}
         {toNext}
         showDecision={!isFinish && substep !== "survey"}
