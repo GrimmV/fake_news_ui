@@ -5,8 +5,11 @@
  * @param params Parameters required by the module
  * @returns Promise containing the visual response
  */
-export async function getPrediction() {
-    const endpoint = "http://localhost:5000/api/v1/prediction"; // Replace with your actual base URL if needed
+export async function getPrediction(datapoint_id: number) {
+
+    let base_url = import.meta.env.VITE_URL
+    
+    const endpoint = base_url + "/api/v1/prediction?datapoint_id=" + datapoint_id; 
 
     try {
         const response = await fetch(endpoint, {

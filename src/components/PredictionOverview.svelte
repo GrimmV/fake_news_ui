@@ -1,53 +1,10 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { getPrediction } from "../../fetching/prediction";
   import SocialPost from "./SocialPost.svelte";
   import RangeIndicator from "./RangeIndicator.svelte";
 
-  let isLoading: boolean = false;
-  let error: string | null = null;
-
-  let post = {
-    author: "Gloria",
-    statement:
-      "George Washington said a free people should be armed to guard against government tyranny.",
-    properties: {
-      "Lexical Diversity (TTR)": { value: 1, min: 0, max: 1 },
-      "Average Word Length": { value: 4.75, min: 3, max: 7 },
-      "Avg Syllables per Word": { value: 1.38, min: 1, max: 2 },
-      "Difficult Word Ratio": { value: 0.5, min: 0, max: 1 },
-      "Dependency Depth": { value: 4, min: 1, max: 10 },
-      Length: { value: 15, min: 5, max: 50 },
-      Sentiment: { value: 0.9111, min: -1, max: 1 },
-    },
-    prediction: {
-      label: "True",
-      probas: {
-        True: "79.61%",
-        Neither: "12.84%",
-        False: "7.55%",
-      },
-    },
-  };
-
-  async function fetchVisual() {
-    isLoading = true;
-    error = null;
-
-    try {
-      const response = await getPrediction();
-      post = response;
-    } catch (err) {
-      error = err instanceof Error ? err.message : "Failed to load visual";
-      console.error("Error fetching visual:", err);
-    } finally {
-      isLoading = false;
-    }
-  }
-
-  onMount(() => {
-    fetchVisual();
-  });
+  export let post;
+  export let isLoading;
+  export let error;
 </script>
 
 <div class="post-container gap-4">
@@ -63,13 +20,13 @@
         avatar={post.author}
       />
       <div class="grid grid-cols-3 gap-4">
-        {#each Object.entries(post.properties) as [key, { value, min, max }]}
-          <RangeIndicator {value} {min} {max} title={key} />
+        {#each Object.entries(post.properties) as [key, { value, min, max, description }]}
+          <RangeIndicator {value} {min} {max} title={key} description={description}/>
         {/each}
       </div>
     </div>
     <div class="prediction-container">
-      <div class="prediction-label">Labeled as: {post.prediction.label}</div>
+      <div class="prediction-label">Model Prediction: {post.prediction.label}</div>
       <div class="probabilities">
         {#each Object.entries(post.prediction.probas) as [key, value]}
           <div class="probability"><strong>{key}</strong> {value}</div>

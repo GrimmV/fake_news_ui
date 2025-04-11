@@ -8,7 +8,8 @@ export function handle_module_information(modules_in) {
     for (let elem of modules_in) {
         visualization_modules.push({
             name: elem["module"],
-            params: elem["parameters"]
+            params: elem["parameters"],
+            param_options: elem["param_options"]
         })
         explanation_modules.push({
             name: elem["module"],

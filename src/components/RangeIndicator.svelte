@@ -1,7 +1,9 @@
 <script lang="ts">
+    import Info from "./Info.svelte";
     import { Card, CardContent, CardHeader } from "$lib/components/ui/card";
     
     export let value: number;
+    export let description: string;
     export let min: number = 0;
     export let max: number = 100;
     export let title: string;
@@ -22,7 +24,8 @@
   </script>
   
   <Card class="h-full hover:shadow-sm transition-shadow">
-    <CardHeader class="pb-2">
+    <CardHeader class="pb-2 relative">
+      <div class="absolute top-0 right-0"><Info text={description}/></div>
       <div class="flex items-center justify-between">
         <h3 class="text-sm font-medium text-muted-foreground">{title}</h3>
         {#if icon}
