@@ -7,12 +7,17 @@
   }
 
   export let dots: Array<IDot>;
+  export let isFinish: boolean;
 
   function getColor(isCorrect: Boolean) {
-    if (isCorrect) {
-      return "text-green-600";
+    if (isFinish) {
+      if (isCorrect) {
+        return "text-green-600";
+      } else {
+        return "text-red-600";
+      }
     } else {
-      return "text-red-600";
+      return "";
     }
   }
 </script>
