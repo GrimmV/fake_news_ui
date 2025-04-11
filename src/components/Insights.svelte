@@ -8,12 +8,26 @@
 </script>
 
 <div class="message assistant">
-    <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">Observations</h2>
-    <p>{content.observations}</p>
-    <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">Conclusions</h2>
-    <p>{content.conclusions}</p>
-    <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">Critical Reflections</h2>
+  <h2
+    class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+  >
+    Observations
+  </h2>
+  <p>{content.observations}</p>
+  <h2
+    class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+  >
+    Conclusions
+  </h2>
+  <p>{content.conclusions}</p>
+  {#if content.critical_reflection}
+    <h2
+      class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+    >
+      Critical Reflections
+    </h2>
     <p>{content.critical_reflection}</p>
+  {/if}
 </div>
 
 <style>

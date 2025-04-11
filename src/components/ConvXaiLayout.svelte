@@ -13,7 +13,7 @@
   export let isLoading;
   export let username: string;
   export let datapointId: number;
-  export let port: number = 8765;
+  export let port: string = "8765";
 
   let socket;
 
@@ -147,7 +147,8 @@
 
   onMount(() => {
     let ws_url = "";
-    if (port === 8765) {
+    console.log(port)
+    if (port === "8765") {
       ws_url = import.meta.env.VITE_WEBSOCKET_1
     } else {
       ws_url = import.meta.env.VITE_WEBSOCKET_2
