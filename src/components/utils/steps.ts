@@ -6,19 +6,19 @@ export const steps = [
     },
     {
       datapoint: 433,
-      type: "advanced",
+      type: "simple",
     },
     {
       datapoint: 84,
-      type: "dashboard",
-    },
-    {
-      datapoint: 143,
       type: "advanced",
     },
     {
-      datapoint: 351,
+      datapoint: 143,
       type: "dashboard",
+    },
+    {
+      datapoint: 351,
+      type: "simple",
     },
     {
       datapoint: 435,

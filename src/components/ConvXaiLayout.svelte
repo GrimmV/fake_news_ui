@@ -176,6 +176,7 @@
       if (type === "processing") {
         sendAssistantResponse(messageId, type, status, content);
       } else if (type === "modules") {
+        console.log(content["modules"])
         let [visualizations, explanations] = handle_module_information(
           content["modules"]
         );
