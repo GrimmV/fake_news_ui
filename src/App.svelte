@@ -161,19 +161,6 @@
           {:else}
             <Survey uiType="dashboard" {toNext} {username} {datapointId} />
           {/if}
-        {:else if currentStep.type === "simple"}
-          {#if substep === "analysis"}
-            <ConvXaiLayout
-              {post}
-              error={errorPrediction}
-              isLoading={isLoadingPrediction}
-              {username}
-              {datapointId}
-              port=8766
-            />
-          {:else}
-            <Survey uiType="simple" {toNext} {username} {datapointId} />
-          {/if}
         {:else if currentStep.type === "advanced"}
           {#if substep === "analysis"}
             <ConvXaiLayout

@@ -2,7 +2,7 @@
 export const steps = [
     {
       datapoint: 65,
-      type: "dashboard",
+      type: "advanced",
     },
     {
       datapoint: 433,

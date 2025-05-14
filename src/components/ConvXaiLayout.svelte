@@ -1,11 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import ChatWindow from "./ChatWindow.svelte";
   import PredictionOverview from "./PredictionOverview.svelte";
-  import Canvas from "./Canvas.svelte";
-
-  import { handle_module_information } from "./utils/handle_module_information";
+  import DashboardIntelligent from "./DashboardIntelligent.svelte";
   import uploadClicks from "../../fetching/firebase";
 
   export let post;
@@ -15,6 +12,9 @@
   export let datapointId: number;
   export let port: string = "8765";
 
+  let ai_insights: any[] = [];
+  let ai_assessment: any;
+  
   let socket;
 
   interface IMessage {
@@ -90,7 +90,7 @@
 
   function sendInitialRequest() {
     let info = {
-      action: "initial user query",
+      action: "initialization",
       content: {
         datapointId: datapointId,
       },
@@ -98,7 +98,7 @@
     };
     uploadClicks(info);
     updateWriteState("Wait for the assistant...");
-    sendSystemRequest("", "initial");
+    sendSystemRequest("", "initialization");
   }
 
   function sendSystemRequest(message: string, type: string) {
@@ -108,32 +108,6 @@
       username: username,
       datapoint_id: datapointId,
     });
-  }
-
-  function sendUserRequest(message: string) {
-    let info = {
-      action: "user query",
-      content: {
-        message: message,
-        datapointId: datapointId,
-      },
-      username: username,
-    };
-    uploadClicks(info);
-    sendRequest({
-      request: message,
-      type: "request",
-      username: username,
-      datapoint_id: datapointId,
-    });
-    let newMsg = {
-      messageId: messages[messages.length - 1].messageId + 1,
-      message: message,
-      actor: "user",
-      type: "request",
-      status: "done",
-    };
-    upsertMessage(newMsg);
   }
 
   function sendRequest(message: IRequest) {
@@ -161,29 +135,22 @@
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      const messageId = data.id;
-      const content = data.content;
-      const type = data.type;
-      const status = data.status;
-      if (
-        (type !== "processing" && type !== "modules" && type !== "insights") ||
-        status === "done"
-      ) {
-        updateWriteState("");
-      } else {
-        updateWriteState("Wait for the assistant...");
-      }
-      if (type === "processing") {
-        sendAssistantResponse(messageId, type, status, content);
-      } else if (type === "modules") {
-        console.log(content["modules"])
-        let [visualizations, explanations] = handle_module_information(
-          content["modules"]
+      if (data.type === "module_update") {
+        let content = data.data;
+        let module_name = content.module_name;
+        let params = content.params;
+        // check if ai_insights contains an object with the same module name and params
+        let index = ai_insights.findIndex(
+          (insight) => insight.module_name === module_name && insight.params === params
         );
-        visualized_modules = visualizations;
-        console.log(visualizations);
-      } else {
-        sendAssistantResponse(messageId, type, status, content);
+        if (index === -1) {
+          ai_insights = [...ai_insights, content];
+        } else {
+          ai_insights[index] = content;
+        }
+      } else if (data.type === "final_assessment") {
+        let content = data.data;
+        ai_assessment = content.summary;
       }
     };
 
@@ -208,16 +175,8 @@
       <PredictionOverview {post} {error} {isLoading} />
     </div>
     <div class="bottom-left">
-      <Canvas modules={visualized_modules} {username} {datapointId} />
+      <DashboardIntelligent {datapointId} {username} {sendInitialRequest} {ai_insights} {ai_assessment} />
     </div>
-  </div>
-  <div class="chat">
-    <ChatWindow
-      {messages}
-      sendRequest={sendUserRequest}
-      {writeState}
-      {sendInitialRequest}
-    />
   </div>
 </div>
 
@@ -246,11 +205,5 @@
     border-radius: 10px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  .chat {
-    width: 30%;
-    min-width: 300px;
-    border-left: 1px solid #ccc;
-    overflow: auto;
   }
 </style>
