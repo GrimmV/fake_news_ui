@@ -133,12 +133,12 @@
     <Login {setUsername} />
   {:else}
     <div>
-      <Manage
+      <!-- <Manage
         {isFinish}
         {dots}
         {toNext}
         showDecision={!isFinish && substep !== "survey"}
-      />
+      /> -->
       <div class="pt-20">
         {#if substep === "basic"}
           <Basic

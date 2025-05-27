@@ -13,79 +13,17 @@
   export let port: string = "8765";
 
   let ai_insights: any[] = [];
-  let ai_assessment: any;
-  
-  let socket;
+  let ai_assessment1: any = {};
+  let ai_assessment2: any = {};
+  let socket: WebSocket | null = null;
 
-  interface IMessage {
-    messageId: number;
-    message: any;
-    actor: string; // e.g., 'user', 'assistant', 'system'
-    type: string; // e.g., 'request', 'status', 'intermediate', 'final'
-    status?: string; // e.g., 'pending', 'processing', 'done'
-    step?: string; // e.g., 'retrieving data', 'summarizing', etc.
-  }
+  $: console.log(ai_insights);
 
   interface IRequest {
-    request: string;
+    meta: any;
     type: string;
     username: string;
     datapoint_id: number;
-  }
-
-  let visualized_modules =
-    typeof window !== "undefined"
-      ? JSON.parse(localStorage.getItem("visualized_modules" + datapointId) || "[]")
-      : [];
-  let messages: Array<IMessage> =
-    typeof window !== "undefined"
-      ? JSON.parse(localStorage.getItem("messages" + datapointId) || "[]")
-      : [];
-
-  let writeState: string =
-    messages.length === 0 ? "Start conversation to interact" : "";
-
-  // Persist changes automatically
-  $: {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("messages" + datapointId, JSON.stringify(messages));
-      localStorage.setItem(
-        "visualized_modules" + datapointId,
-        JSON.stringify(visualized_modules)
-      );
-    }
-  }
-
-  function updateWriteState(info: string) {
-    writeState = info;
-  }
-
-  function upsertMessage(newMsg: IMessage) {
-    const index = messages.findIndex(
-      (msg) => msg.messageId === newMsg.messageId
-    );
-    if (index !== -1) {
-      let updatedMessages = [...messages];
-      updatedMessages[index] = newMsg;
-      messages = [...updatedMessages];
-    } else {
-      messages = [...messages, newMsg];
-    }
-  }
-
-  function sendAssistantResponse(
-    messageId: number,
-    type: string,
-    status: string,
-    message: any
-  ) {
-    upsertMessage({
-      messageId: messageId,
-      message: message,
-      actor: "assistant",
-      type: type,
-      status: status,
-    });
   }
 
   function sendInitialRequest() {
@@ -97,13 +35,43 @@
       username: username,
     };
     uploadClicks(info);
-    updateWriteState("Wait for the assistant...");
-    sendSystemRequest("", "initialization");
+    sendRequest({
+      meta: {},
+      type: "initialization",
+      username: username,
+      datapoint_id: datapointId,
+    });
   }
 
-  function sendSystemRequest(message: string, type: string) {
+  function update_assessment(
+    context: string[] = [],
+    assessment_type: string = "standard",
+    module_focus: string = ""
+  ) {
+    let type = "update_assessment";
+    let info = {
+      action: type,
+      content: {
+        datapointId: datapointId,
+        context: context,
+        assessment_type: assessment_type,
+        module_focus: module_focus,
+      },
+      username: username,
+    };
+    uploadClicks(info);
+    if (assessment_type === "standard") {
+      ai_assessment1 = {};
+    } else {
+      ai_assessment2 = {};
+    }
     sendRequest({
-      request: message,
+      meta: {
+        context: context,
+        assessment_type: assessment_type,
+        module_focus: module_focus,
+        modules: ai_insights,
+      },
       type: type,
       username: username,
       datapoint_id: datapointId,
@@ -121,11 +89,11 @@
 
   onMount(() => {
     let ws_url = "";
-    console.log(port)
+    console.log(port);
     if (port === "8765") {
-      ws_url = import.meta.env.VITE_WEBSOCKET_1
+      ws_url = import.meta.env.VITE_WEBSOCKET_1;
     } else {
-      ws_url = import.meta.env.VITE_WEBSOCKET_2
+      ws_url = import.meta.env.VITE_WEBSOCKET_2;
     }
     socket = new WebSocket(ws_url);
 
@@ -141,7 +109,8 @@
         let params = content.params;
         // check if ai_insights contains an object with the same module name and params
         let index = ai_insights.findIndex(
-          (insight) => insight.module_name === module_name && insight.params === params
+          (insight) =>
+            insight.module_name === module_name && insight.params === params
         );
         if (index === -1) {
           ai_insights = [...ai_insights, content];
@@ -150,7 +119,11 @@
         }
       } else if (data.type === "final_assessment") {
         let content = data.data;
-        ai_assessment = content.summary;
+        if (data.variant === "standard") {
+          ai_assessment1 = content.summary;
+        } else {
+          ai_assessment2 = content.summary;
+        }
       }
     };
 
@@ -175,7 +148,15 @@
       <PredictionOverview {post} {error} {isLoading} />
     </div>
     <div class="bottom-left">
-      <DashboardIntelligent {datapointId} {username} {sendInitialRequest} {ai_insights} {ai_assessment} />
+      <DashboardIntelligent
+        {datapointId}
+        {username}
+        {sendInitialRequest}
+        {ai_insights}
+        {ai_assessment1}
+        {ai_assessment2}
+        {update_assessment}
+      />
     </div>
   </div>
 </div>
