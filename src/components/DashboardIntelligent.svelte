@@ -51,13 +51,16 @@
     (highlight === "right" && Object.keys(ai_assessment2).length === 0);
 
   let features = [
-    "Lexical Diversity (TTR)",
-    "Average Word Length",
-    "Avg Syllables per Word",
-    "Difficult Word Ratio",
-    "Dependency Depth",
-    "Length",
+    "us_vs_them_lang",
+    "exaggerated_uncertainty",
+    "source_quality",
+    "victim_villain_language",
+    "black_and_white_language",
+    "dehumanization",
+    "emotionality",
+    "reading_difficulty",
     "sentiment",
+    "polarization",
   ];
 
   function updateHighlight() {
@@ -78,19 +81,6 @@
         label: labels,
       },
     },
-    // {
-    //   name: "feature distribution 2D",
-    //   params: {
-    //     feature_name_1: features[0],
-    //     feature_name_2: features[1],
-    //     label: labels[0],
-    //   },
-    //   param_options: {
-    //     feature_name_1: features,
-    //     feature_name_2: features,
-    //     label: labels,
-    //   },
-    // },
     {
       name: "performance metrics",
       params: {},
@@ -118,22 +108,7 @@
       },
     },
     {
-      name: "word importance",
-      params: {},
-      param_options: {},
-    },
-    {
       name: "individual feature importance",
-      params: {},
-      param_options: {},
-    },
-    {
-      name: "similar predictions",
-      params: {},
-      param_options: {},
-    },
-    {
-      name: "counterfactuals",
       params: {},
       param_options: {},
     },
