@@ -9,6 +9,8 @@
   export let ai_insights: any[] = [];
   export let ai_assessment1: any = {};
   export let ai_assessment2: any = {};
+  export let doubleAssessment: boolean = false;
+  export let interaction: boolean = false;
   export let update_assessment: (
     context: string[],
     assessment_type: string,
@@ -82,6 +84,19 @@
       },
     },
     {
+      name: "feature distribution 2D",
+      params: {
+        feature_name_1: features[0],
+        feature_name_2: features[1],
+        label: labels[0],
+      },
+      param_options: {
+        feature_name_1: features,
+        feature_name_2: features,
+        label: labels,
+      },
+    },
+    {
       name: "performance metrics",
       params: {},
       param_options: {},
@@ -128,26 +143,42 @@
         Assessment
       </h2>
       <div class="flex flex-row gap-2 mt-5 justify-around">
-        <Assessment
-          context={context["standard"]}
-          update_context={(new_context: string[]) =>
-            update_context("standard", new_context)}
-          ai_assessment={ai_assessment1}
-          highlight={highlight === "left"}
-          {updateHighlight}
-          update_assessment={() =>
-            update_assessment(context["standard"], "standard", "")}
-        />
-        <Assessment
-          context={context["sceptical"]}
-          update_context={(new_context: string[]) =>
-            update_context("sceptical", new_context)}
-          ai_assessment={ai_assessment2}
-          highlight={highlight === "right"}
-          {updateHighlight}
-          update_assessment={() =>
-            update_assessment(context["sceptical"], "sceptical", "")}
-        />
+        {#if doubleAssessment}
+          <Assessment
+            context={context["standard"]}
+            update_context={(new_context: string[]) =>
+              update_context("standard", new_context)}
+            ai_assessment={ai_assessment1}
+            highlight={highlight === "left"}
+            {updateHighlight}
+            update_assessment={() =>
+              update_assessment(context["standard"], "standard", "")}
+            {interaction}
+          />
+          <Assessment
+            context={context["sceptical"]}
+            update_context={(new_context: string[]) =>
+              update_context("sceptical", new_context)}
+            ai_assessment={ai_assessment2}
+            highlight={highlight === "right"}
+            {updateHighlight}
+            update_assessment={() =>
+              update_assessment(context["sceptical"], "sceptical", "")}
+            {interaction}
+          />
+        {:else}
+          <Assessment
+            context={context["standard"]}
+            update_context={(new_context: string[]) =>
+              update_context("standard", new_context)}
+            ai_assessment={ai_assessment1}
+            highlight={highlight === "left"}
+            {updateHighlight}
+            update_assessment={() =>
+              update_assessment(context["standard"], "standard", "")}
+            {interaction}
+          />
+        {/if}
       </div>
     </div>
     <div class="m-2 p-2 shadow-md rounded-md">
@@ -158,6 +189,7 @@
         {username}
         {important_modules}
         {assessment_loading}
+        {interaction}
         update_assessment={(module_focus: string) =>
           update_assessment(
             context[assessment_type],

@@ -1,39 +1,35 @@
 
 export const steps = [
     {
-      datapoint: 65,
-      type: "advanced",
-    },
-    {
-      datapoint: 433,
-      type: "simple",
-    },
-    {
-      datapoint: 84,
-      type: "advanced",
-    },
-    {
-      datapoint: 143,
+      datapoint: 0,
       type: "dashboard",
     },
     {
-      datapoint: 351,
+      datapoint: 115,
       type: "simple",
     },
     {
-      datapoint: 435,
-      type: "advanced",
+      datapoint: 1,
+      type: "double_assessment",
     },
     {
-      datapoint: 484,
+      datapoint: 215,
+      type: "interactive",
+    },
+    {
+      datapoint: 235,
       type: "dashboard",
     },
     {
-      datapoint: 326,
-      type: "advanced",
+      datapoint: 5,
+      type: "simple",
     },
-    // {
-    //   datapoint: 513,
-    //   type: "advanced",
-    // },
+    {
+      datapoint: 166,
+      type: "double_assessment",
+    },
+    {
+      datapoint: 176,
+      type: "interactive",
+    },
   ];

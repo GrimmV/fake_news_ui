@@ -11,6 +11,8 @@
   export let username: string;
   export let datapointId: number;
   export let port: string = "8765";
+  export let doubleAssessment: boolean = false;
+  export let interaction: boolean = false;
 
   let ai_insights: any[] = [];
   let ai_assessment1: any = {};
@@ -156,6 +158,8 @@
         {ai_assessment1}
         {ai_assessment2}
         {update_assessment}
+        {doubleAssessment}
+        {interaction}
       />
     </div>
   </div>

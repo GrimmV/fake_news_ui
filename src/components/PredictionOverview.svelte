@@ -17,7 +17,8 @@
       <SocialPost
         content={post.statement}
         username={post.author}
-        avatar={post.author}
+        avatar={post.avatar}
+        date={post.date}
       />
       <div class="grid grid-cols-3 gap-4">
         {#each Object.entries(post.properties) as [key, { value, min, max, description }]}

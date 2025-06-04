@@ -5,6 +5,7 @@
     export let content: string;
     export let username: string = "Dirk";
     export let avatar: string = "Dirk";
+    export let date: string = "2021-01-01";
   </script>
   
   <Card class="w-full max-w-2xl transition-colors flex p-2">
@@ -22,5 +23,6 @@
   
     <CardContent class="px-4 py-2">
       <p class="text-sm sm:text-base">{content}</p>
+      <div class="text-sm text-muted-foreground">{date}</div>
     </CardContent>
   </Card>

@@ -4,13 +4,12 @@
   import ConvXaiLayout from "./components/ConvXaiLayout.svelte";
   import Basic from "./components/Basic.svelte";
   import Manage from "./components/manage/Manage.svelte";
-  import Dashboard from "./components/Dashboard.svelte";
   import Login from "./components/Login.svelte";
   import { steps } from "./components/utils/steps";
   import { getPrediction } from "../fetching/prediction";
   import uploadClicks from "../fetching/firebase";
   import Survey from "./components/Survey.svelte";
-
+  import Dashboard from "./components/Dashboard.svelte";
   // Initialize from localStorage if available
   let username =
     typeof window !== "undefined"
@@ -133,12 +132,12 @@
     <Login {setUsername} />
   {:else}
     <div>
-      <!-- <Manage
+      <Manage
         {isFinish}
         {dots}
         {toNext}
         showDecision={!isFinish && substep !== "survey"}
-      /> -->
+      />
       <div class="pt-20">
         {#if substep === "basic"}
           <Basic
@@ -152,16 +151,16 @@
           </div>
         {:else if currentStep.type === "dashboard"}
           {#if substep === "analysis"}
-            <Dashboard {datapointId} {username} />
             <Basic
               {post}
               error={errorPrediction}
               isLoading={isLoadingPrediction}
             />
+            <Dashboard {datapointId} {username} />
           {:else}
             <Survey uiType="dashboard" {toNext} {username} {datapointId} />
           {/if}
-        {:else if currentStep.type === "advanced"}
+        {:else if currentStep.type === "simple"}
           {#if substep === "analysis"}
             <ConvXaiLayout
               {post}
@@ -169,7 +168,39 @@
               isLoading={isLoadingPrediction}
               {username}
               {datapointId}
-              port=8765
+              port="8765"
+              doubleAssessment={false}
+              interaction={false}
+            />
+          {:else}
+            <Survey uiType="advanced" {toNext} {username} {datapointId} />
+          {/if}
+        {:else if currentStep.type === "double_assessment"}
+          {#if substep === "analysis"}
+            <ConvXaiLayout
+              {post}
+              error={errorPrediction}
+              isLoading={isLoadingPrediction}
+              {username}
+              {datapointId}
+              port="8765"
+              doubleAssessment={true}
+              interaction={false}
+            />
+          {:else}
+            <Survey uiType="advanced" {toNext} {username} {datapointId} />
+          {/if}
+        {:else if currentStep.type === "interactive"}
+          {#if substep === "analysis"}
+            <ConvXaiLayout
+              {post}
+              error={errorPrediction}
+              isLoading={isLoadingPrediction}
+              {username}
+              {datapointId}
+              port="8765"
+              doubleAssessment={true}
+              interaction={true}
             />
           {:else}
             <Survey uiType="advanced" {toNext} {username} {datapointId} />

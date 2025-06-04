@@ -3,6 +3,9 @@
   import uploadClicks from "../../fetching/firebase";
   import { deepEqual } from "./utils/deep_equal";
   import Info from "./Info.svelte";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let module: string;
   export let params: any;
@@ -30,10 +33,12 @@
   $: {
     if (module && selectedParams) {
       let tmp_params = Object.fromEntries(
-        Object.entries(selectedParams).map(([key, obj]) => [
-          key,
-          obj.value, // Extract the 'value' field
-        ])
+        Object.entries(selectedParams).map(([key, obj]) => {
+          return [
+            key,
+            obj.value, // Extract the 'value' field
+          ]
+        })
       );
       if (!deepEqual(params, tmp_params)) {
         let info = {
@@ -46,6 +51,7 @@
           username: username,
         };
         uploadClicks(info);
+        dispatch('paramsChange', { module, params: tmp_params });
       }
       params = tmp_params;
     }

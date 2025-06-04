@@ -8,6 +8,26 @@
   export let update_assessment: any;
   export let context: string[] = [];
   export let update_context: (context: string[]) => void;
+  export let interaction: boolean = false;
+
+  const trustworthinessMapping = {
+    0: {
+      label: "Poor",
+      color: "text-red-500"
+    },
+    1: {
+      label: "Fair",
+      color: "text-yellow-500"
+    },
+    2: {
+      label: "Good",
+      color: "text-green-500"
+    },
+    3: {
+      label: "Excellent",
+      color: "text-blue-500"
+    }
+  };
 
   function toggleHighlight() {
     updateHighlight();
@@ -39,16 +59,13 @@
         >
       {/if}
       <div class="m-2 p-2 shadow-md rounded-md">
-        Trustworthiness: {ai_assessment.trustworthiness}
+        Trustworthiness: <i class="fa-solid fa-circle {trustworthinessMapping[ai_assessment.judgement_rating].color}"></i> {trustworthinessMapping[ai_assessment.judgement_rating].label}
       </div>
       <div class="m-2 p-2 shadow-md rounded-md">
-        Confidence: {ai_assessment.score}
-      </div>
-      <div class="m-2 p-2 shadow-md rounded-md">
-        Reason: {ai_assessment.reason}
+        Reason: {ai_assessment.judgement_reason}
       </div>
     </div>
-    {#if highlight}
+    {#if highlight && interaction}
       <div class="flex flex-row justify-center gap-2 py-2 my-1 w-full">
         <ContextPopover {context} {update_context} />
         <Button on:click={reassess}

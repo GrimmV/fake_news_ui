@@ -3,7 +3,7 @@ export const visualDescriptions = {
     "feature distribution": "Displays the distribution of the given feature over the value space, depending on the specified class label",
     "feature distribution 2D": "Displays the distribution over the two given features of the value space, depending on the specified class label",
     "performance metrics": "Metrics show how effective and reliable the models predictions are in general",
-    "confusion matrix": "Shows how well predictions and the actual label in the training data align. 0: True, 1: Neither, 2: False",
+    "confusion matrix": "Shows how well predictions and the actual label in the training data align. 0: False, 1: Neither, 2: True",
     "global feature importance": "Shows how relevant the features are for the model on average",
     "partial dependence plot": "Gives insight about how the features impacts changes when its value changes",
     "individual feature importance": "Shows how relevant the features are for the particular model prediction",

@@ -1,7 +1,5 @@
 <script lang="ts">
-  import SimilarsVisualIntelligent from "./SimilarsVisualIntelligent.svelte";
   import VisualIntelligent from "./VisualIntelligent.svelte";
-  import WordShapVisualIntelligent from "./WordShapVisualIntelligent.svelte";
   import { visualDescriptions } from "./utils/visual_descriptions";
   import { getModelVisual } from "../../fetching/visuals";
   import { onMount } from "svelte";
@@ -15,8 +13,8 @@
   export let important_modules: any[] = [];
   export let assessment_loading: boolean = false;
   export let update_assessment: (module_focus: string) => void;
+  export let interaction: boolean = false;
 
-  let similar_visuals = ["similar predictions", "counterfactuals"];
   let visualSrcs: Record<string, string> = {};
 
   const retrieve_ai_insights = (module_name: string) => {
@@ -52,6 +50,7 @@
     // Initial fetch for all modules
     modules.forEach((my_module) => {
       const module_insights = retrieve_ai_insights(my_module.name);
+      console.log("module_insights", module_insights);
       const params =
         module_insights.length > 0
           ? module_insights[0].params
@@ -87,46 +86,25 @@
           ? "border-1 border-primary bg-sky-100"
           : "") + " flex flex-row"}
       >
-        {#if similar_visuals.includes(my_module.name)}
-          <SimilarsVisualIntelligent
-            module={my_module.name}
-            params={ai_insights.length > 0
-              ? ai_insights[0].params
-              : my_module.params}
-            insights={ai_insights.length > 0 ? ai_insights[0].summary : ""}
-            description={visualDescriptions[my_module.name]}
-            {datapointId}
-            {username}
-          />
-        {:else if my_module.name === "word importance"}
-          <WordShapVisualIntelligent
-            module={my_module.name}
-            params={ai_insights.length > 0
-              ? ai_insights[0].params
-              : my_module.params}
-            insights={ai_insights.length > 0 ? ai_insights[0].summary : ""}
-            description={visualDescriptions[my_module.name]}
-            {datapointId}
-            {username}
-          />
-        {:else}
-          <VisualIntelligent
-            module={my_module.name}
-            description={visualDescriptions[my_module.name]}
-            params={ai_insights.length > 0
-              ? ai_insights[0].params
-              : my_module.params}
-            insights={ai_insights.length > 0 ? ai_insights[0].summary : ""}
-            paramOptions={my_module.param_options}
-            iframeSrc={visualSrcs[my_module.name]}
-            {datapointId}
-            {username}
+        <VisualIntelligent
+          module={my_module.name}
+          description={visualDescriptions[my_module.name]}
+          params={ai_insights.length > 0
+            ? ai_insights[0].params
+            : my_module.params}
+          insights={ai_insights.length > 0 ? ai_insights[0].summary : ""}
+          paramOptions={my_module.param_options}
+          iframeSrc={visualSrcs[my_module.name]}
+          {datapointId}
+          {username}
+          on:paramsChange={(e) => fetchVisual(e.detail.module, e.detail.params)}
+        />
+        {#if interaction}
+          <ModuleFocusPopover
+            {assessment_loading}
+            update_assessment={() => update_assessment(ai_insights[0].action)}
           />
         {/if}
-        <ModuleFocusPopover
-          {assessment_loading}
-          update_assessment={() => update_assessment(ai_insights[0].action)}
-        />
       </div>
     {:else}
       <Skeleton class="h-[300px] w-[1000px]" />
