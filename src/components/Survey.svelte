@@ -1,7 +1,12 @@
 <script lang="ts">
   import uploadClicks from "../../fetching/firebase";
 
-  export let uiType: "dashboard" | "simple" | "advanced";
+  export let uiType:
+    | "dashboard"
+    | "simple"
+    | "advanced"
+    | "interactive"
+    | "double_assessment";
   export let toNext;
   export let username: string;
   export let datapointId: number;
@@ -9,12 +14,15 @@
   // Store form values
   let formValues = {
     confidence: 0,
-    helpfulness: 0,
-    influentialAspects: [] as string[],
-    easeOfUse: 0,
-    challenges: "",
-    naturalness: 0,
-    otherInfluentialAspect: ""
+    trust: 0,
+    transparency: 0,
+    usefulness: 0,
+    reflection: 0,
+    over_reliance: 0,
+    dashboard_limitations: 0,
+    single_llm_trust: 0,
+    dual_llm_encouragement: 0,
+    interaction_trust: 0,
   };
 
   // Handle form submission
@@ -24,12 +32,13 @@
     let info = {
       action: "submit",
       content: {
-        ...formValues,
-        datapointId: datapointId,
+        values: formValues,
+        ui_type: uiType,
       },
       username: username,
+      datapointId: datapointId,
     };
-    uploadClicks(info)
+    uploadClicks(info);
     toNext("");
     // Add your submission logic here (e.g., API call)
   }
@@ -37,27 +46,36 @@
   // Update checkboxes for multi-select
   function updateAspects(option: string, checked: boolean) {
     if (checked) {
-      formValues.influentialAspects = [...formValues.influentialAspects, option];
+      formValues.influentialAspects = [
+        ...formValues.influentialAspects,
+        option,
+      ];
     } else {
-      formValues.influentialAspects = formValues.influentialAspects.filter(item => item !== option);
+      formValues.influentialAspects = formValues.influentialAspects.filter(
+        (item) => item !== option
+      );
     }
   }
 </script>
 
-<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-sm border border-gray-200">
-  <h2 class="text-lg font-semibold text-gray-900 mb-4">Post-Interaction Feedback</h2>
-  
+<div
+  class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-sm border border-gray-200"
+>
+  <h2 class="text-lg font-semibold text-gray-900 mb-4">
+    Post-Interaction Feedback
+  </h2>
+
   <form on:submit={handleSubmit} class="space-y-5">
     <!-- Question 1: Confidence -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-2">
-        1. How confident are you in your final judgment?
+        1. How <b>confident</b> are you in the moderation decision you made?
       </label>
       <div class="flex justify-between text-xs text-gray-500">
         <span>Not confident</span>
         <span>Very confident</span>
       </div>
-      <div class="mt-1 flex items-center space-x-4">
+      <div class="mt-1 flex items-center justify-between space-x-4">
         {#each [1, 2, 3, 4, 5] as num}
           <label class="flex items-center">
             <input
@@ -73,130 +91,188 @@
       </div>
     </div>
 
-    <!-- Question 2: Helpfulness -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">
-        2. How helpful was the UI?
-      </label>
-      <div class="flex justify-between text-xs text-gray-500">
-        <span>Not helpful</span>
-        <span>Extremely helpful</span>
-      </div>
-      <div class="mt-1 flex items-center space-x-4">
-        {#each [1, 2, 3, 4, 5] as num}
-          <label class="flex items-center">
-            <input
-              type="radio"
-              name="helpfulness"
-              value={num}
-              bind:group={formValues.helpfulness}
-              class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-            />
-            <span class="ml-2 block text-sm text-gray-700">{num}</span>
-          </label>
-        {/each}
-      </div>
-    </div>
-
-    <!-- Question 3: Influential Aspects -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">
-        3. What aspects influenced your judgment? (Select up to 2)
-      </label>
-      <div class="space-y-2 mt-2">
-        {#each [
-          "Visualization of feature importance",
-          "Explanation clarity",
-          "Ability to ask questions",
-          "Speed/ease of accessing information",
-        ] as option}
-          <label class="flex items-center">
-            <input
-              type="checkbox"
-              name="influentialAspects"
-              on:change={(e) => updateAspects(option, e.currentTarget.checked)}
-              class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-            />
-            <span class="ml-2 block text-sm text-gray-700">{option}</span>
-          </label>
-        {/each}
-        <label class="flex items-center">
-          <input
-            type="checkbox"
-            name="influentialAspects"
-            on:change={(e) => updateAspects("Other", e.currentTarget.checked)}
-            class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-          />
-          <span class="ml-2 block text-sm text-gray-700">Other:</span>
-          <input
-            type="text"
-            bind:value={formValues.otherInfluentialAspect}
-            class="ml-2 block w-full text-sm border-b border-gray-300 focus:border-indigo-500 focus:outline-none"
-            placeholder="Specify"
-          />
-        </label>
-      </div>
-    </div>
-
-    <!-- Question 4: Ease of Use -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">
-        4. How easy was this UI to use?
-      </label>
-      <div class="flex justify-between text-xs text-gray-500">
-        <span>Very difficult</span>
-        <span>Very easy</span>
-      </div>
-      <div class="mt-1 flex items-center space-x-4">
-        {#each [1, 2, 3, 4, 5] as num}
-          <label class="flex items-center">
-            <input
-              type="radio"
-              name="easeOfUse"
-              value={num}
-              bind:group={formValues.easeOfUse}
-              class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-            />
-            <span class="ml-2 block text-sm text-gray-700">{num}</span>
-          </label>
-        {/each}
-      </div>
-    </div>
-
-    <!-- Question 5: Challenges -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">
-        5. Any challenges or confusion?
-      </label>
-      <textarea
-        bind:value={formValues.challenges}
-        rows={2}
-        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        placeholder="Optional"
-      />
-    </div>
-
-    <!-- Question 6 (Conditional) -->
     {#if uiType !== "dashboard"}
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">
-          6. How natural did the conversation feel?
+          2. How much do you <b>trust</b> the assistant's assessment in this case?
         </label>
         <div class="flex justify-between text-xs text-gray-500">
-          <span>Unnatural</span>
-          <span>Very natural</span>
+          <span>Not at all</span>
+          <span>Completely</span>
         </div>
-        <div class="mt-1 flex items-center space-x-4">
+        <div class="mt-1 flex items-center justify-between space-x-4">
           {#each [1, 2, 3, 4, 5] as num}
             <label class="flex items-center">
               <input
                 type="radio"
-                name="naturalness"
+                name="trust"
                 value={num}
-                bind:group={formValues.naturalness}
+                bind:group={formValues.trust}
                 class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
               />
               <span class="ml-2 block text-sm text-gray-700">{num}</span>
+            </label>
+          {/each}
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          3. How well could you <b>understand</b> why the assistant made this judgment?
+        </label>
+        <div class="flex justify-between text-xs text-gray-500">
+          <span>Not at all</span>
+          <span>Completely</span>
+        </div>
+        <div class="mt-1 flex items-center justify-between space-x-4">
+          {#each [1, 2, 3, 4, 5] as num}
+            <label class="flex items-center">
+              <input
+                type="radio"
+                name="transparency"
+                value={num}
+                bind:group={formValues.transparency}
+                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+              />
+              <span class="ml-2 block text-sm text-gray-700">{num}</span>
+            </label>
+          {/each}
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          4. How <b>helpful</b> was the assistant's assessment in making your
+          moderation decision?
+        </label>
+        <div class="flex justify-between text-xs text-gray-500">
+          <span>Not at all helpful</span>
+          <span>Extremely helpful</span>
+        </div>
+        <div class="mt-1 flex items-center justify-between space-x-4">
+          {#each [1, 2, 3, 4, 5] as num}
+            <label class="flex items-center">
+              <input
+                type="radio"
+                name="usefulness"
+                value={num}
+                bind:group={formValues.usefulness}
+                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+              />
+              <span class="ml-2 block text-sm text-gray-700">{num}</span>
+            </label>
+          {/each}
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          5. Did you consider your <b>own judgment</b> more, equally, or less than the
+          assistant's suggestion?
+        </label>
+        <div class="mt-1 flex flex-col items-left justify-between">
+          {#each ["I mostly relied on the assistant", "I weighed both equally", "I mostly followed my own judgment"] as item, num}
+            <label class="flex items-center">
+              <input
+                type="radio"
+                name="over_reliance"
+                value={num+1}
+                bind:group={formValues.over_reliance}
+                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+              />
+              <span class="ml-2 block text-sm text-gray-700">{item}</span>
+            </label>
+          {/each}
+        </div>
+      </div>
+    {/if}
+
+    {#if uiType === "dashboard"}
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          2. Did you feel the assistant overlooked any important information
+          from the dashboard?
+        </label>
+        <div class="mt-1 flex items-center space-x-4">
+          {#each ["Yes", "No"] as item, num}
+            <label class="flex items-center">
+              <input
+                type="radio"
+                name="dashboard_limitations"
+                value={num+1}
+                bind:group={formValues.dashboard_limitations}
+                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+              />
+              <span class="ml-2 block text-sm text-gray-700">{item}</span>
+            </label>
+          {/each}
+        </div>
+      </div>
+    {/if}
+
+    {#if uiType === "simple"}
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          6. Did you feel the assistant overlooked any important information
+          from the dashboard?
+        </label>
+        <div class="mt-1 flex items-center space-x-4">
+          {#each ["Yes", "No"] as item, num}
+            <label class="flex items-center">
+              <input
+                type="radio"
+                name="single_llm_trust"
+                value={num+1}
+                bind:group={formValues.single_llm_trust}
+                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+              />
+              <span class="ml-2 block text-sm text-gray-700">{item}</span>
+            </label>
+          {/each}
+        </div>
+      </div>
+    {/if}
+
+    {#if uiType === "double_assessment"}
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          6. Did seeing two differing assessments help you reflect more
+          critically on the decision?
+        </label>
+        <div class="mt-1 flex items-center space-x-4">
+          {#each ["Not at all", "A little", "Somewhat", "A lot"] as item, num}
+            <label class="flex items-center">
+              <input
+                type="radio"
+                name="dual_llm_encouragement"
+                value={num+1}
+                bind:group={formValues.dual_llm_encouragement}
+                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+              />
+              <span class="ml-2 block text-sm text-gray-700">{item}</span>
+            </label>
+          {/each}
+        </div>
+      </div>
+    {/if}
+
+    {#if uiType === "interactive"}
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          6. Did adding your own input make the assistant's re-evaluation feel
+          more aligned with your judgment?
+        </label>
+        <div class="mt-1 flex items-center space-x-4">
+          {#each ["Not at all", "A little", "Somewhat", "A lot"] as item, num}
+            <label class="flex items-center">
+              <input
+                type="radio"
+                name="interaction_trust"
+                value={num+1}
+                bind:group={formValues.interaction_trust}
+                class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+              />
+              <span class="ml-2 block text-sm text-gray-700">{item}</span>
             </label>
           {/each}
         </div>

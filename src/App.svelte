@@ -10,6 +10,7 @@
   import uploadClicks from "../fetching/firebase";
   import Survey from "./components/Survey.svelte";
   import Dashboard from "./components/Dashboard.svelte";
+  import BasicPopover from "./components/BasicPopover.svelte";
   // Initialize from localStorage if available
   let username =
     typeof window !== "undefined"
@@ -44,7 +45,7 @@
 
   $: currentStep = steps[activeStep];
   $: datapointId = currentStep.datapoint;
-  let post;
+  let post = null;
 
   let isLoadingPrediction: boolean = false;
   let errorPrediction: string | null = null;
@@ -138,7 +139,7 @@
         {toNext}
         showDecision={!isFinish && substep !== "survey"}
       />
-      <div class="pt-20">
+      <div class="pt-20 flex flex-col items-center relative">
         {#if substep === "basic"}
           <Basic
             {post}
@@ -151,12 +152,14 @@
           </div>
         {:else if currentStep.type === "dashboard"}
           {#if substep === "analysis"}
-            <Basic
-              {post}
-              error={errorPrediction}
-              isLoading={isLoadingPrediction}
-            />
-            <Dashboard {datapointId} {username} />
+            <div class="flex flex-row items-center gap-4 flex-wrap justify-center">
+              <BasicPopover
+                {post}
+                error={errorPrediction}
+                isLoading={isLoadingPrediction}
+              />
+              <Dashboard {datapointId} {username} />
+            </div>
           {:else}
             <Survey uiType="dashboard" {toNext} {username} {datapointId} />
           {/if}
@@ -188,7 +191,12 @@
               interaction={false}
             />
           {:else}
-            <Survey uiType="advanced" {toNext} {username} {datapointId} />
+            <Survey
+              uiType="double_assessment"
+              {toNext}
+              {username}
+              {datapointId}
+            />
           {/if}
         {:else if currentStep.type === "interactive"}
           {#if substep === "analysis"}
@@ -203,7 +211,7 @@
               interaction={true}
             />
           {:else}
-            <Survey uiType="advanced" {toNext} {username} {datapointId} />
+            <Survey uiType="interactive" {toNext} {username} {datapointId} />
           {/if}
         {/if}
       </div>

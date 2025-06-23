@@ -14,7 +14,10 @@
   <div class="flex gap-10 justify-center items-center m-2 p-2 shadow-md rounded-md">
     <Progress {dots} {isFinish}/>
     {#if showDecision}
-      <Decision {toNext} />
+      <div class="flex flex-col items-center gap-2">
+        <p class="text-sm font-bold">I think the statement is...</p>
+        <Decision {toNext} />
+      </div>
     {/if}
   </div>
 </div>

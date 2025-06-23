@@ -4,7 +4,7 @@
   import PredictionOverview from "./PredictionOverview.svelte";
   import DashboardIntelligent from "./DashboardIntelligent.svelte";
   import uploadClicks from "../../fetching/firebase";
-
+  import BasicPopover from "./BasicPopover.svelte";
   export let post;
   export let error;
   export let isLoading;
@@ -146,10 +146,8 @@
 
 <div class="container">
   <div class="left-panel">
-    <div class="top-left">
-      <PredictionOverview {post} {error} {isLoading} />
-    </div>
-    <div class="bottom-left">
+    <div class="bottom-left w-full">
+      <BasicPopover {post} {error} {isLoading} />
       <DashboardIntelligent
         {datapointId}
         {username}
@@ -168,7 +166,7 @@
 <style>
   .container {
     display: flex;
-    height: 100vh;
+    height: fit-content;
   }
   .left-panel {
     flex: 1;
@@ -179,14 +177,12 @@
   .top-left {
     flex: 1;
     max-height: 33.33%;
-    overflow: auto;
     border-radius: 10px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   .bottom-left {
     flex: 2;
-    overflow: auto;
     border-radius: 10px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
