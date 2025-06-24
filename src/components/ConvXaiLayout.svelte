@@ -121,6 +121,21 @@
         }
       } else if (data.type === "final_assessment") {
         let content = data.data;
+
+        let info = {
+          action: data.type,
+          content: {
+            datapointId: datapointId,
+            context: {
+              judgement_rating: content.summary.judgement_rating,
+              judgement_reason: content.summary.judgement_reason,
+              assessment_type: content.variant,
+              module_focus: content.summary.module_focus,
+            },
+          },
+          username: username,
+        };
+        uploadClicks(info);
         if (data.variant === "standard") {
           ai_assessment1 = content.summary;
         } else {
