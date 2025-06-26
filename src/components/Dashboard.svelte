@@ -104,7 +104,7 @@
         </li>
         <li>
           Lastly, you can explore insights about the particular prediction at hand
-          through means of feature importance and exploring similar datapoints.
+          based on feature importance.
         </li>
       </ul>
     </div>
