@@ -94,11 +94,11 @@
     </p>
     <ul class="my-6 ml-6 list-disc [&>li]:mt-2">
       <li>
-        In the second part, you can explore the models performance and how much
+        In the first part, you can explore the models performance and how much
         importance individual features have on average.
       </li>
       <li>
-        In the first section, you can explore how the underlying data is
+        In the second section, you can explore how the underlying data is
         distributed over the value space and with respect to a given model
         prediction
       </li>

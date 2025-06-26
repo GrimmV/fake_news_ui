@@ -13,20 +13,20 @@
   const trustworthinessMapping = {
     0: {
       label: "Poor",
-      color: "text-red-500"
+      color: "text-red-500",
     },
     1: {
       label: "Fair",
-      color: "text-yellow-500"
+      color: "text-yellow-500",
     },
     2: {
       label: "Good",
-      color: "text-green-500"
+      color: "text-green-500",
     },
     3: {
       label: "Excellent",
-      color: "text-blue-500"
-    }
+      color: "text-blue-500",
+    },
   };
 
   function toggleHighlight() {
@@ -59,7 +59,19 @@
         >
       {/if}
       <div class="m-2 p-2 shadow-md rounded-md">
-        Trustworthiness: <i class="fa-solid fa-circle {trustworthinessMapping[ai_assessment.judgement_rating].color}"></i> {trustworthinessMapping[ai_assessment.judgement_rating].label}
+        Trustworthiness: <i
+          class="fa-solid fa-circle {trustworthinessMapping[
+            ai_assessment.judgement_rating
+          ].color}"
+        ></i>
+        {trustworthinessMapping[ai_assessment.judgement_rating].label}
+        <p>
+          (of
+          {#each Object.values(trustworthinessMapping) as elem}
+            <i class="fa-solid fa-circle {elem.color}"> </i>{elem.label}
+          {/each}
+          )
+        </p>
       </div>
       <div class="m-2 p-2 shadow-md rounded-md">
         Reason: {ai_assessment.judgement_reason}
