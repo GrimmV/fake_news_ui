@@ -67,6 +67,17 @@
     } else {
       ai_assessment2 = {};
     }
+    console.log({
+      meta: {
+        context: context,
+        assessment_type: assessment_type,
+        module_focus: module_focus,
+        modules: ai_insights,
+      },
+      type: type,
+      username: username,
+      datapoint_id: datapointId,
+    });
     sendRequest({
       meta: {
         context: context,
