@@ -25,7 +25,7 @@
           name: "feature distribution",
           params: {
             feature_name: features[0],
-            label: labels[0],
+            label: labels[2],
           },
           param_options: {
             feature_name: features,
@@ -37,7 +37,7 @@
           params: {
             feature_name_1: features[0],
             feature_name_2: features[1],
-            label: labels[0],
+            label: labels[2],
           },
           param_options: {
             feature_name_1: features,
@@ -59,14 +59,14 @@
         },
         {
           name: "global feature importance",
-          params: { label: labels[0] },
+          params: { label: labels[2] },
           param_options: { label: labels },
         },
         {
           name: "partial dependence plot",
           params: {
             feature_name: features[0],
-            label: labels[0],
+            label: labels[2],
           },
           param_options: {
             feature_name: features,
