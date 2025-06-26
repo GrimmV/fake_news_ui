@@ -139,7 +139,7 @@
         {toNext}
         showDecision={!isFinish && substep !== "survey"}
       />
-      <div class="pt-20 flex flex-col items-center relative">
+      <div class="pb-4 flex flex-col items-center relative">
         {#if substep === "basic"}
           <Basic
             {post}

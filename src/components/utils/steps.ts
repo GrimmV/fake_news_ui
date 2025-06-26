@@ -1,35 +1,19 @@
 
 export const steps = [
     {
-      datapoint: 0,
+      datapoint: 50,
       type: "dashboard",
     },
     {
-      datapoint: 115,
+      datapoint: 50,
       type: "simple",
     },
     {
-      datapoint: 1,
+      datapoint: 50,
       type: "double_assessment",
     },
     {
-      datapoint: 215,
-      type: "interactive",
-    },
-    {
-      datapoint: 235,
-      type: "dashboard",
-    },
-    {
-      datapoint: 5,
-      type: "simple",
-    },
-    {
-      datapoint: 166,
-      type: "double_assessment",
-    },
-    {
-      datapoint: 176,
+      datapoint: 50,
       type: "interactive",
     },
   ];
