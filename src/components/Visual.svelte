@@ -22,7 +22,7 @@
       key,
       {
         value: value,
-        label: value,
+        label: value.replaceAll("_", " "),
         disabled: false,
       },
     ])

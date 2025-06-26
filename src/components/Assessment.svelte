@@ -38,7 +38,7 @@
   };
 </script>
 
-<div class="w-1/2 flex flex-col justify-start items-center">
+<div class="w-full flex flex-col justify-start items-center">
   {#if Object.keys(ai_assessment).length === 0}
     <Skeleton class="h-[500px] w-[500px]" />
   {:else}

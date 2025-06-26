@@ -21,7 +21,7 @@
       key,
       {
         value: value,
-        label: value,
+        label: value.replaceAll("_", " "),
         disabled: false,
       },
     ])
@@ -72,7 +72,7 @@
               <Select.Group>
                 <Select.Label>{key}</Select.Label>
                 {#each options as option}
-                  <Select.Item value={option}>{option}</Select.Item>
+                  <Select.Item value={option}>{option.replaceAll("_", " ")}</Select.Item>
                 {/each}
               </Select.Group>
             </Select.Content>
@@ -89,7 +89,7 @@
       ></iframe>
     </div>
     <div class="insights">
-      <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">Insights</h2>
+      <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 capitalize">{module}</h2>
       <div class="insights-text">{insights}</div>
     </div>
   </div>

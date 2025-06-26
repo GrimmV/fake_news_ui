@@ -43,11 +43,10 @@
   let important_modules: any[] = [];
 
   $: if (highlight === "left") {
-    important_modules = ai_assessment1.most_relevant_modules;
+    important_modules = ai_assessment1.most_relevant_modules ?? [];
   } else {
-    important_modules = ai_assessment2.most_relevant_modules;
-  }
-
+    important_modules = ai_assessment2.most_relevant_modules ?? [];
+  } 
   $: assessment_loading =
     (highlight === "left" && Object.keys(ai_assessment1).length === 0) ||
     (highlight === "right" && Object.keys(ai_assessment2).length === 0);
@@ -144,28 +143,38 @@
       </h2>
       <div class="flex flex-row gap-2 mt-5 justify-around">
         {#if doubleAssessment}
-          <Assessment
-            context={context["standard"]}
-            update_context={(new_context: string[]) =>
-              update_context("standard", new_context)}
-            ai_assessment={ai_assessment1}
-            highlight={highlight === "left"}
-            {updateHighlight}
-            update_assessment={() =>
-              update_assessment(context["standard"], "standard", "")}
-            {interaction}
-          />
-          <Assessment
-            context={context["sceptical"]}
-            update_context={(new_context: string[]) =>
-              update_context("sceptical", new_context)}
-            ai_assessment={ai_assessment2}
-            highlight={highlight === "right"}
-            {updateHighlight}
-            update_assessment={() =>
-              update_assessment(context["sceptical"], "sceptical", "")}
-            {interaction}
-          />
+          <div class="flex flex-col gap-2 w-1/2 items-center">
+            <h3 class="text-2xl font-semibold tracking-tight">
+              Standard Assessment
+            </h3>
+            <Assessment
+              context={context["standard"]}
+              update_context={(new_context: string[]) =>
+                update_context("standard", new_context)}
+              ai_assessment={ai_assessment1}
+              highlight={highlight === "left"}
+              {updateHighlight}
+              update_assessment={() =>
+                update_assessment(context["standard"], "standard", "")}
+              {interaction}
+            />
+          </div>
+          <div class="flex flex-col gap-2 w-1/2 items-center">
+            <h3 class="text-2xl font-semibold tracking-tight">
+              Sceptical Assessment
+            </h3>
+            <Assessment
+              context={context["sceptical"]}
+              update_context={(new_context: string[]) =>
+                update_context("sceptical", new_context)}
+              ai_assessment={ai_assessment2}
+              highlight={highlight === "right"}
+              {updateHighlight}
+              update_assessment={() =>
+                update_assessment(context["sceptical"], "sceptical", "")}
+              {interaction}
+            />
+          </div>
         {:else}
           <Assessment
             context={context["standard"]}

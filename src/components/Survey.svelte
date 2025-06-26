@@ -190,11 +190,10 @@
     {#if uiType === "dashboard"}
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">
-          2. Did you feel the assistant overlooked any important information
-          from the dashboard?
+          2. Was any part of the dashboard difficult to interpret or left you uncertain?
         </label>
         <div class="mt-1 flex items-center space-x-4">
-          {#each ["Yes", "No"] as item, num}
+          {#each ["No", "Some of it", "Most of it", "All of it"] as item, num}
             <label class="flex items-center">
               <input
                 type="radio"

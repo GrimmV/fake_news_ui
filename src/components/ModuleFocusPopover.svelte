@@ -3,7 +3,9 @@
     import * as Popover from "$lib/components/ui/popover";
 
     export let assessment_loading: boolean = false;
-    export let update_assessment: (module_focus: string) => void;
+    export let update_assessment: () => void;
+
+    console.log(assessment_loading);
   </script>
   
   <Popover.Root portal={null}>
@@ -17,7 +19,7 @@
         <p class="text-sm text-muted-foreground">
             The assistant will reconsider its assessment with a special focus on this module.
         </p>
-        <Button on:click={update_assessment}><i class="fa-solid fa-rotate-right mr-2"></i>Reassess with module focus</Button>
+        <Button on:click={update_assessment} disabled={assessment_loading}><i class="fa-solid fa-rotate-right mr-2"></i>Reassess with module focus</Button>
       </div>
     </Popover.Content>
   </Popover.Root>
