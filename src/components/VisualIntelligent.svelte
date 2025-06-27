@@ -11,6 +11,7 @@
   export let params: any;
   export let description: string;
   export let insights: string;
+  export let laymans_insights: string;
   export let paramOptions: any;
   export let datapointId: number;
   export let username: string;
@@ -20,14 +21,15 @@
     Object.entries(params).map(([key, value]) => [
       key,
       {
-        value: value,
-        label: value.replaceAll("_", " "),
+        value: value as string,
+        label: (value as string).replaceAll("_", " "),
         disabled: false,
       },
     ])
   );
 
   let paramOptionsEntries = Object.entries(paramOptions);
+  let showTechnicalInsights = false;
 
   // Re-fetch when props change
   $: {
@@ -72,7 +74,7 @@
               <Select.Group>
                 <Select.Label>{key}</Select.Label>
                 {#each options as option}
-                  <Select.Item value={option}>{option.replaceAll("_", " ")}</Select.Item>
+                  <Select.Item value={option as string}>{(option as string).replaceAll("_", " ")}</Select.Item>
                 {/each}
               </Select.Group>
             </Select.Content>
@@ -89,8 +91,22 @@
       ></iframe>
     </div>
     <div class="insights">
-      <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 capitalize">{module}</h2>
-      <div class="insights-text">{insights}</div>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 capitalize">{module}</h2>
+        <button
+          class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          on:click={() => showTechnicalInsights = !showTechnicalInsights}
+        >
+          {showTechnicalInsights ? 'Show Simple' : 'Show Technical'}
+        </button>
+      </div>
+      <div class="insights-text">
+        {#if showTechnicalInsights}
+          {insights}
+        {:else}
+          {laymans_insights}
+        {/if}
+      </div>
     </div>
   </div>
 </div>
