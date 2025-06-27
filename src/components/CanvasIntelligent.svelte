@@ -15,6 +15,8 @@
   export let update_assessment: (module_focus: string) => void;
   export let interaction: boolean = false;
 
+  console.log("ai_insights", ai_insights);
+
   let visualSrcs: Record<string, string> = {};
 
   const retrieve_ai_insights = (module_name: string) => {
@@ -93,6 +95,7 @@
             ? ai_insights[0].params
             : my_module.params}
           insights={ai_insights.length > 0 ? ai_insights[0].summary : ""}
+          laymans_insights={ai_insights.length > 0 ? ai_insights[0].laymans_summary : ""}
           paramOptions={my_module.param_options}
           iframeSrc={visualSrcs[my_module.name]}
           {datapointId}

@@ -10,6 +10,8 @@
   export let update_context: (context: string[]) => void;
   export let interaction: boolean = false;
 
+  let showDetailedReason = false;
+
   const trustworthinessMapping = {
     0: {
       label: "Poor",
@@ -74,7 +76,22 @@
         </p>
       </div>
       <div class="m-2 p-2 shadow-md rounded-md">
-        Reason: {ai_assessment.judgement_reason}
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-semibold">Reason:</span>
+          <button
+            class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            on:click={() => showDetailedReason = !showDetailedReason}
+          >
+            {showDetailedReason ? 'Show Simple' : 'Show Detailed'}
+          </button>
+        </div>
+        <div>
+          {#if showDetailedReason}
+            {ai_assessment.judgement_reason}
+          {:else}
+            {ai_assessment.judgement_reason_short}
+          {/if}
+        </div>
       </div>
     </div>
     {#if highlight && interaction}
