@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import PredictionOverview from "./PredictionOverview.svelte";
   import DashboardIntelligent from "./DashboardIntelligent.svelte";
   import uploadClicks from "../../fetching/firebase";
   import BasicPopover from "./BasicPopover.svelte";
