@@ -207,7 +207,7 @@
               {username}
               {datapointId}
               port="8765"
-              doubleAssessment={true}
+              doubleAssessment={false}
               interaction={true}
             />
           {:else}
