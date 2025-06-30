@@ -2,6 +2,7 @@
   import { Button } from "$lib/components/ui/button";
   import ContextPopover from "./ContextPopover.svelte";
   import { Skeleton } from "$lib/components/ui/skeleton";
+  import uploadClicks from "../../fetching/firebase";
   export let ai_assessment: any;
   export let highlight: any = false;
   export let updateHighlight: any;
@@ -9,7 +10,8 @@
   export let context: string[] = [];
   export let update_context: (context: string[]) => void;
   export let interaction: boolean = false;
-
+  export let datapointId: string = "";
+  export let username: string = "";
   let showDetailedReason = false;
 
   const trustworthinessMapping = {
@@ -38,6 +40,19 @@
   const reassess = () => {
     update_assessment();
   };
+
+  function toggleReason() {
+    showDetailedReason = !showDetailedReason;
+    let info = {
+      action: "assessment toggle",
+      content: {
+        highlight: highlight,
+        datapointId: datapointId,
+      },
+      username: username,
+    };
+    uploadClicks(info);
+  }
 </script>
 
 <div class="w-full flex flex-col justify-start items-center">
@@ -80,7 +95,7 @@
           <span class="font-semibold">Reason:</span>
           <button
             class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-            on:click={() => showDetailedReason = !showDetailedReason}
+            on:click={toggleReason}
           >
             {showDetailedReason ? 'Show Simple' : 'Show Detailed'}
           </button>

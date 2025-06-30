@@ -58,6 +58,19 @@
       params = tmp_params;
     }
   }
+
+  function handleToggleInsights() {
+    showTechnicalInsights = !showTechnicalInsights;
+    let info = {
+      action: "insight toggle",
+      content: {
+        module: module,
+        datapointId: datapointId,
+      },
+      username: username,
+    };
+    uploadClicks(info);
+  }
 </script>
 
 <div class="canvas-container w-fit h-fit">
@@ -95,7 +108,7 @@
         <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 capitalize">{module}</h2>
         <button
           class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          on:click={() => showTechnicalInsights = !showTechnicalInsights}
+          on:click={handleToggleInsights}
         >
           {showTechnicalInsights ? 'Show Simple' : 'Show Technical'}
         </button>

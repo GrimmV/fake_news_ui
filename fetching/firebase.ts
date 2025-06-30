@@ -1,6 +1,6 @@
 export default function uploadClicks(click) {
 
-    const serverAddress = "https://xai-limited-choice-default-rtdb.europe-west1.firebasedatabase.app/";
+    const serverAddress = "https://xai-limited-choice-default-rtdb.europe-west1.firebasedatabase.app/eval2/";
 
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");

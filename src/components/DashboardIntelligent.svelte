@@ -157,6 +157,8 @@
               update_assessment={() =>
                 update_assessment(context["standard"], "standard", "")}
               {interaction}
+              {datapointId}
+              {username}
             />
           </div>
           <div class="flex flex-col gap-2 w-1/2 items-center">
@@ -173,6 +175,8 @@
               update_assessment={() =>
                 update_assessment(context["sceptical"], "sceptical", "")}
               {interaction}
+              {datapointId}
+              {username}
             />
           </div>
         {:else}
@@ -186,6 +190,8 @@
             update_assessment={() =>
               update_assessment(context["standard"], "standard", "")}
             {interaction}
+            {datapointId}
+            {username}
           />
         {/if}
       </div>
